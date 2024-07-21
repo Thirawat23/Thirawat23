@@ -1,0 +1,45 @@
+#define BLYNK_TEMPLATE_ID "TMPL6pxnNeJde"
+#define BLYNK_TEMPLATE_NAME "HI ESP32"
+#define BLYNK_TEMPLATE_ID "TMPL6pxnNeJde"
+#define BLYNK_TEMPLATE_NAME "HI ESP32"
+#define BLYNK_AUTH_TOKEN "Uv6iB8I9a93kXwXeRxAe5ZbPkd4Ya1sf"
+#include <WiFi.h>
+#include <WiFiClient.h>
+#include <BlynkSimpleEsp32.h>
+char auth[] =  BLYNK_AUTH_TOKEN;
+char ssid[] = "Wokwi-GUEST";
+char pass[] = "";
+
+#include <DHT.h>
+
+DHT dht(18,DHT22);
+
+void setup() {
+  Serial.begin(115200);
+  dht.begin();
+  Blynk.begin(auth,ssid,pass);
+  pinMode(32, OUTPUT); 
+}
+
+void loop() {
+  Blynk.run();
+float temperature = dht.readTemperature();
+float humidity = dht.readHumidity();
+Serial.print("Humidity");
+Serial.print(humidity);
+Serial.print(" % Temperature");
+Serial.print(temperature);
+Serial.println("C");
+Blynk.virtualWrite(V2,humidity);
+Blynk.virtualWrite(V3,temperature);
+ delay(2000);
+}
+
+BLYNK_WRITE(V1){
+  int ledState = param.asInt();
+  if (ledState == 1){
+   digitalWrite(32,HIGH);
+   }else{
+    digitalWrite(32, LOW);
+   }
+}
